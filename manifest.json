@@ -1,6 +1,6 @@
 ﻿{
 	"name": "No_Wall_Clip",
-	"version_number": "1.0.0",
+	"version_number": "1.0.1",
 	"website_url": "https://github.com/Klehrik/RoRR-NoWallClip",
 	"description": "Prevents going through walls with too much speed.",
 	"dependencies": [
