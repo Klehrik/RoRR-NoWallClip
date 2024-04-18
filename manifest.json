@@ -1,0 +1,10 @@
+﻿{
+	"name": "No_Wall_Clip",
+	"version_number": "1.0.0",
+	"website_url": "https://github.com/Klehrik/RoRR-NoWallClip",
+	"description": "Prevents going through walls with too much speed.",
+	"dependencies": [
+		"ReturnOfModding-ReturnOfModding-1.0.23",
+		"Klehrik-HelperFunctions-1.0.4"
+	]
+}
