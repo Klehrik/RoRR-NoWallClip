@@ -1,4 +1,4 @@
--- No Wall Clip v1.0.2
+-- No Wall Clip v1.0.3
 -- Klehrik
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
@@ -7,13 +7,21 @@ mods.on_all_mods_loaded(function() for k, v in pairs(mods) do if type(v) == "tab
 local player = nil
 local last_x = nil
 local last_y = nil
+local delay = 0
 
 
 
 -- ========== Main ==========
 
 gm.post_script_hook(gm.constants.__input_system_tick, function()
+    if delay > 0 then
+        delay = delay - 1
+        return
+    end
+
+
     if Helper.instance_exists(player) then
+
         -- Reset saved position when falling out of the room
         if player.y >= gm.variable_global_get("room_height") then
             last_x = nil
@@ -29,10 +37,22 @@ gm.post_script_hook(gm.constants.__input_system_tick, function()
             end
         end
 
-        last_x, last_y = player.x, player.y
+        if player.activity_type ~= 7 then last_x, last_y = player.x, player.y end
 
     else
         player = Helper.get_client_player()
         if player then last_x, last_y = player.x, player.y end
     end
+end)
+
+
+gm.pre_script_hook(gm.constants.run_create, function(self, other, result, args)
+    last_x = nil
+    delay = 30
+end)
+
+
+gm.post_script_hook(gm.constants.stage_roll_next, function(self, other, result, args)
+    last_x = nil
+    delay = 30
 end)

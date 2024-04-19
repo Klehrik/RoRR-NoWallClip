@@ -6,3 +6,6 @@
 
 ### v1.0.2
 * Fixed being able to still clip walls when using some skills
+
+### v1.0.3
+* Properly resets saved position on entering a new stage
