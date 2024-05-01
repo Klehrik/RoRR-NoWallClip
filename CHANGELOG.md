@@ -9,3 +9,8 @@
 
 ### v1.0.3
 * Properly resets saved position on entering a new stage
+
+### v1.0.4
+* Fixed weird interactions with the following skills:
+    * Loader: Short Circuit
+    * Acrid: Dissolving Ambush
