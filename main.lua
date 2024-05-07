@@ -1,4 +1,4 @@
--- No Wall Clip v1.0.4
+-- No Wall Clip v1.0.5
 -- Klehrik
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
@@ -53,6 +53,11 @@ gm.post_code_execute(function(self, other, code, result, flags)
         -- Acrid: Allow alt utility to function
         if self.actor_state_current_id == 93.0 and self.activity_type == 3.0 then last_x = nil end
     end
+end)
+
+
+gm.post_script_hook(gm.constants.run_create, function(self, other, result, args)
+    last_x = nil
 end)
 
 

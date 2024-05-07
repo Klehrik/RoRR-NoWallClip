@@ -14,3 +14,6 @@
 * Fixed weird interactions with the following skills:
     * Loader: Short Circuit
     * Acrid: Dissolving Ambush
+
+### v1.0.5
+* Fixed saved position not resetting on new run
