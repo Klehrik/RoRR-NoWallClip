@@ -1,10 +1,15 @@
--- No Wall Clip v1.0.5
+-- No Wall Clip v1.0.6
 -- Klehrik
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
 mods.on_all_mods_loaded(function() for k, v in pairs(mods) do if type(v) == "table" and v.hfuncs then Helper = v end end end)
 
+MOD_NoWallClip = true
+
 local last_x, last_y = nil, nil
+disable = 0
+
+local marble_down = false
 
 
 
@@ -20,11 +25,32 @@ function reset_actor_activity(actor)
 end
 
 
+function marble_gate_present()
+    local gate = Helper.find_active_instance(gm.constants.oHome)
+    if gate and gate.parent == Helper.get_client_player() then return true end
+    return false
+end
+
+
 
 -- ========== Main ==========
 
 gm.post_code_execute(function(self, other, code, result, flags)
     if code.name:match("oP_Step") then
+        -- Check if this player belongs to this client
+        if Helper.get_client_player() ~= self then return end
+
+        -- Disable when teleporting to Carrara Marble
+        local gate = marble_gate_present()
+        if marble_down and not gate then disable = 1 end
+        marble_down = gate
+
+        -- Disable timer
+        if disable > 0 then
+            disable = disable - 1
+            last_x = nil
+            return
+        end
 
         -- Reset saved position when falling out of the room
         if self.y >= gm.variable_global_get("room_height") then
@@ -58,6 +84,7 @@ end)
 
 gm.post_script_hook(gm.constants.run_create, function(self, other, result, args)
     last_x = nil
+    disable = 6     -- Disable this for the first 0.1 seconds of run loading in
 end)
 
 

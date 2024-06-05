@@ -17,3 +17,8 @@
 
 ### v1.0.5
 * Fixed saved position not resetting on new run
+
+### v1.0.6
+* Should work properly in multiplayer now
+* Should no longer mess with SaveMod when loading file position
+* Now allows Carrara Marble to work
