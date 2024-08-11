@@ -1,8 +1,8 @@
--- No Wall Clip v1.0.6
+-- No Wall Clip v1.0.7
 -- Klehrik
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
-mods.on_all_mods_loaded(function() for k, v in pairs(mods) do if type(v) == "table" and v.hfuncs then Helper = v end end end)
+mods.on_all_mods_loaded(function() for _, m in pairs(mods) do if type(m) == "table" and m.RoRR_Modding_Toolkit then Actor = m.Actor Buff = m.Buff Callback = m.Callback Helper = m.Helper Instance = m.Instance Item = m.Item Net = m.Net Object = m.Object Player = m.Player Resources = m.Resources Survivor = m.Survivor break end end end)
 
 MOD_NoWallClip = true
 
@@ -10,6 +10,7 @@ local last_x, last_y = nil, nil
 disable = 0
 
 local marble_down = false
+local warp_dart = false
 
 
 
@@ -26,8 +27,15 @@ end
 
 
 function marble_gate_present()
-    local gate = Helper.find_active_instance(gm.constants.oHome)
-    if gate and gate.parent == Helper.get_client_player() then return true end
+    local gate = Instance.find(gm.constants.oHome)
+    if gate and gate.parent == Player.get_client() then return true end
+    return false
+end
+
+
+function warp_dart_present()
+    local dart = Instance.find(gm.constants.oHuntressBolt4)
+    if dart and dart.parent == Player.get_client() then return true end
     return false
 end
 
@@ -38,12 +46,17 @@ end
 gm.post_code_execute(function(self, other, code, result, flags)
     if code.name:match("oP_Step") then
         -- Check if this player belongs to this client
-        if Helper.get_client_player() ~= self then return end
+        if Player.get_client() ~= self then return end
 
         -- Disable when teleporting to Carrara Marble
         local gate = marble_gate_present()
         if marble_down and not gate then disable = 1 end
         marble_down = gate
+
+        -- Disable when teleporting to Warp Dart
+        local dart = warp_dart_present()
+        if warp_dart and not dart then disable = 1 end
+        warp_dart = dart
 
         -- Disable timer
         if disable > 0 then

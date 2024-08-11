@@ -22,3 +22,6 @@
 * Should work properly in multiplayer now
 * Should no longer mess with SaveMod when loading file position
 * Now allows Carrara Marble to work
+
+### v1.0.7
+* Fixed Huntress Warp Dart not working
