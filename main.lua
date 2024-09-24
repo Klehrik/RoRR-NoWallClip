@@ -4,13 +4,13 @@
 log.info("Successfully loaded ".._ENV["!guid"]..".")
 mods.on_all_mods_loaded(function() for _, m in pairs(mods) do if type(m) == "table" and m.RoRR_Modding_Toolkit then Actor = m.Actor Buff = m.Buff Callback = m.Callback Helper = m.Helper Instance = m.Instance Item = m.Item Net = m.Net Object = m.Object Player = m.Player Resources = m.Resources Survivor = m.Survivor break end end end)
 
-MOD_NoWallClip = true
+NoWallClip = true
 
 local last_x, last_y = nil, nil
 disable = 0
 
-local marble_down = false
-local warp_dart = false
+local marble_down = nil
+local warp_dart = nil
 
 
 
@@ -27,15 +27,15 @@ end
 
 
 function marble_gate_present()
-    local gate = Instance.find(gm.constants.oHome)
-    if gate and gate.parent == Player.get_client() then return true end
+    local gate = Instance.find(Object.find("ror-home"))
+    if gate:exists() and gate.parent ~= -4.0 and gate.parent:same(Player.get_client()) then return true end
     return false
 end
 
 
 function warp_dart_present()
-    local dart = Instance.find(gm.constants.oHuntressBolt4)
-    if dart and dart.parent == Player.get_client() then return true end
+    local dart = Instance.find(Object.find("ror-huntressBolt4"))
+    if dart:exists() and dart.parent ~= -4.0 and dart.parent:same(Player.get_client()) then return true end
     return false
 end
 
@@ -46,17 +46,17 @@ end
 gm.post_code_execute(function(self, other, code, result, flags)
     if code.name:match("oP_Step") then
         -- Check if this player belongs to this client
-        if Player.get_client() ~= self then return end
+        if not Player.get_client():same(self) then return end
 
         -- Disable when teleporting to Carrara Marble
         local gate = marble_gate_present()
         if marble_down and not gate then disable = 1 end
-        marble_down = gate
+        marble_down = gate  -- gate or nil
 
         -- Disable when teleporting to Warp Dart
         local dart = warp_dart_present()
         if warp_dart and not dart then disable = 1 end
-        warp_dart = dart
+        warp_dart = dart    -- dart or nil
 
         -- Disable timer
         if disable > 0 then
@@ -99,11 +99,3 @@ gm.post_script_hook(gm.constants.run_create, function(self, other, result, args)
     last_x = nil
     disable = 6     -- Disable this for the first 0.1 seconds of run loading in
 end)
-
-
--- Debug
--- gm.post_code_execute(function(self, other, code, result, flags)
---     if code.name:match("oInit_Draw_7") then
---         if last_x ~= nil then gm.draw_circle(last_x, last_y, 4, false) end
---     end
--- end)
